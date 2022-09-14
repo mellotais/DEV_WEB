@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Contato</title>
+</head>
+<body>
+    <div class="content">
+        <h1>Formulário </h1>
+        <form id="form">
+            <div>
+                <p>Nome:</p>
+                <input type="text" placeholder="Digite seu nome" id=" nome" class="inputs required" oninput="nameValidate()">
+                <span class="span-required">Nome deve ter no mínimo 3 caracteres</span>
+            </div>
+            <div>
+                <p>Sobrenome:</p>
+                <input type="text" placeholder="Digite seu sobrenome" id=" sobrenome" class="inputs required" oninput="sobrenameValidate()">
+                <span class="span-required">Sobrenome deve ter no mínimo 3 caracteres</span>
+            </div>
+            <div>
+                <p>Email:</p>
+                <input type="email" placeholder="Digite seu email" id="email" class="inputs required" oninput="emailValidate()">
+                <span class="span-required">Digite um email válido</span>
+            </div>
+            <div>
+                <p>Telefone:</p>
+                <input type="tel" placeholder="Digite seu telefone" id="telefone" class="inputs required" oninput="telValidate()">
+                <span class="span-required">Telefone deve ter no mínimo 8 caracteres</span>
+            </div>
+            <div>
+                <p>Idade:</p>
+                <input type="text" placeholder="Digite sua idade" id="idade"  class="inputs required" oninput="idadeValidate()">
+                <span class="span-required">Idade deve ter no mínimo 3 caracteres</span>
+            </div>
+            <div>
+                <p>Data de Nascimento:</p>
+                <input type="date" placeholder="Digite sua data de nascimento" id="nascimento" class="inputs required" oninput="validardataDeNascimento();"  id="dataDeNascimento" >
+                <span class="span-required"> Digite uma data válida </span>
+            </div>
+            <div>
+                <p>Cidade:</p>
+                <input type="text" placeholder="Digite sua cidade" id="cidade" class="inputs required" oninput="cidadeValidate()">
+                <span class="span-required"> Digite uma cidade válida</span>
+            </div>
+            <div>
+                <p>Rede Social:</p>
+                <input type="text" placeholder="Digite sua rede social" id="redesocial" class="inputs required" oninput=" redesocialValidate()">
+                <span class="span-required">Deve ter no mínimo 3 caracteres</span>
+            </div>
+            
+            <p>Origem de contato: </p>
+            <div class="box-select">
+                <div>
+                    <input type="checkbox" id="trabalho" value="trabalho" name="origem">
+                    <label for="trabalho">Trabalho</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="faculdade" value="Faculdade" name="origem">
+                    <label for="faculdade">Faculdade</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="familia" value="Familia" name="origem">
+                    <label for="familia">Família</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="amigos" value="amigos" name="origem">
+                    <label for="amigos">Amigos</label>
+                </div>
+            </div>
+
+            <p>Sexo:</p>
+            <div class="box-select">
+                    <div>
+                        <input type="radio" id="m" value="m" name="sexo">
+                        <label for="m">Masculino</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="f" value="f" name="sexo">
+                        <label for="f">Feminino</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="o" value="o" name="sexo">
+                        <label for="o">Outro</label>
+                    </div>
+            </div><br>
+
+            <fieldset>
+                <div class="box-select">
+                    <div>
+                        <label for="Foto">Foto:</label>
+                        <input type="file" name="image" />
+                    </div>
+                    <div>
+                        <label for ="parente"> É parente? </label>
+                        <input type="checkbox" id="parente" name= "parente" value="">
+                    </div>
+                </div>
+            </fieldset> 
+
+            <button type="submit" >Enviar</button>  
+            <button type="reset">Cancelar</button>  
+        </form>
+    </div>
+</body>
+<script>
+    const form   = document.getElementById('form');
+    const campos = document.querySelectorAll('.required');
+    const spans  = document.querySelectorAll('.span-required');
+    const emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        nameValidate();
+        sobrenameValidate();
+        telValidate();
+        redesocialValidate()
+        idadeValidate();
+        cidadeValidate();
+        emailValidate();
+        validardataDeNascimento();
+        
+    });
+
+    function formJsonString( form ) {
+        var obj = {};
+        var elements = form.querySelectorAll( "input, select, textarea" );
+        elements.forEach(element => {
+            let name = element.name
+            let value = element.value
+        if(name){
+          obj[name] = value
+        }
+    })
+        return JSON.stringify( obj );
+        }
+
+
+    function setError(index){
+        campos[index].style.border = '2px solid #e63636';
+        spans[index].style.display = 'block';
+    }
+
+    function removeError(index){
+        campos[index].style.border = '';
+        spans[index].style.display = 'none';
+    }
+
+    function nameValidate(){
+        if(campos[0].value.length < 3)
+        {
+            setError(0);
+        }
+        else
+        {
+            removeError(0);
+        }
+    }
+
+    function sobrenameValidate(){
+        if(campos[1].value.length < 3)
+        {
+            setError(1);
+        }
+        else
+        {
+            removeError(1);
+        }
+    }
+
+    function telValidate(){
+        if(campos[3].value.length < 8)
+        {
+            setError(3);
+        }
+        else
+        {
+            removeError(3);
+        }
+    }
+
+    function idadeValidate(){
+        if(campos[4].value.length < 1)
+        {
+            setError(4);
+        }
+        else
+        {
+            removeError(4);
+        }
+    }
+
+    function cidadeValidate(){
+        if(campos[6].value.length < 3)
+        {
+            setError(6);
+        }
+        else
+        {
+            removeError(6);
+        }
+    }
+
+    function emailValidate(){
+        if(!emailRegex.test(campos[2].value))
+        {
+            setError(2);
+        }
+        else
+        {
+            removeError(2);
+        }
+    }
+
+    function redesocialValidate(){
+        if(campos[7].value.length < 3)
+        {
+            setError(7);
+        }
+        else
+        {
+            removeError(7);
+        }
+    }
+
+    function validardataDeNascimento(){
+
+        if (campos[5].value.length < 1){
+                setError(5);
+        } 
+        else {
+            removeError(5);
+        }
+
+
+}
+
+</script>
+</html>
