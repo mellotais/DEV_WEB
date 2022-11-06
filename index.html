@@ -10,45 +10,46 @@
 <body>
     <div class="content">
         <h1>Formulário </h1>
-        <form id="form">
+        <form id="form" name ="formulario" action="array.php" method="post">
             <div>
                 <p>Nome:</p>
-                <input type="text" placeholder="Digite seu nome" id=" nome" class="inputs required" oninput="nameValidate()">
+                <input type="text" placeholder="Digite seu nome" id=" nome" class="inputs required" required onchange="nameValidate()">
                 <span class="span-required">Nome deve ter no mínimo 3 caracteres</span>
             </div>
             <div>
                 <p>Sobrenome:</p>
-                <input type="text" placeholder="Digite seu sobrenome" id=" sobrenome" class="inputs required" oninput="sobrenameValidate()">
+                <input type="text" placeholder="Digite seu sobrenome" id=" sobrenome" class="inputs required" required onchange="sobrenameValidate()">
                 <span class="span-required">Sobrenome deve ter no mínimo 3 caracteres</span>
             </div>
             <div>
                 <p>Email:</p>
-                <input type="email" placeholder="Digite seu email" id="email" class="inputs required" oninput="emailValidate()">
+                <input type="email" placeholder="Digite seu email" id="email" class="inputs required" required onchange="emailValidate()">
                 <span class="span-required">Digite um email válido</span>
             </div>
             <div>
                 <p>Telefone:</p>
-                <input type="tel" placeholder="Digite seu telefone" id="telefone" class="inputs required" oninput="telValidate()">
+                <input type="tel" placeholder="Digite seu telefone" id="telefone" class="inputs required" required onchange="telValidate()">
                 <span class="span-required">Telefone deve ter no mínimo 8 caracteres</span>
             </div>
             <div>
-                <p>Idade:</p>
-                <input type="text" placeholder="Digite sua idade" id="idade"  class="inputs required" oninput="idadeValidate()">
-                <span class="span-required">Idade deve ter no mínimo 3 caracteres</span>
-            </div>
-            <div>
                 <p>Data de Nascimento:</p>
-                <input type="date" placeholder="Digite sua data de nascimento" id="nascimento" class="inputs required" oninput="validardataDeNascimento();"  id="dataDeNascimento" >
+                <input type="date" placeholder="Digite sua data de nascimento" id="nascimento" class="inputs required" required onchange="calcularIdade()" oninput="validardataDeNascimento()" >
                 <span class="span-required"> Digite uma data válida </span>
             </div>
             <div>
+                <p>Idade:</p>
+                <input type="number" placeholder="Digite sua idade" id="idade"  class="inputs required" required onchange="idadeValidate()">
+                <span class="span-required">Idade deve ter no mínimo 1 caracteres</span>
+            </div>
+            
+            <div>
                 <p>Cidade:</p>
-                <input type="text" placeholder="Digite sua cidade" id="cidade" class="inputs required" oninput="cidadeValidate()">
+                <input type="text" placeholder="Digite sua cidade" id="cidade" class="inputs required" required onchange="cidadeValidate()">
                 <span class="span-required"> Digite uma cidade válida</span>
             </div>
             <div>
                 <p>Rede Social:</p>
-                <input type="text" placeholder="Digite sua rede social" id="redesocial" class="inputs required" oninput=" redesocialValidate()">
+                <input type="text" placeholder="Digite sua rede social" id="redesocial" class="inputs required" required onchange=" redesocialValidate()">
                 <span class="span-required">Deve ter no mínimo 3 caracteres</span>
             </div>
             
@@ -101,43 +102,56 @@
                 </div>
             </fieldset> 
 
-            <button type="submit" >Enviar</button>  
+            <button type="submit" name="acao" value="salvar" class="btn btn-primary" >Enviar</button>  
             <button type="reset">Cancelar</button>  
         </form>
     </div>
 </body>
 <script>
-    const form   = document.getElementById('form');
+   
     const campos = document.querySelectorAll('.required');
     const spans  = document.querySelectorAll('.span-required');
     const emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        nameValidate();
-        sobrenameValidate();
-        telValidate();
-        redesocialValidate()
-        idadeValidate();
-        cidadeValidate();
-        emailValidate();
-        validardataDeNascimento();
+   // form.addEventListener('submit', (event) => {
+    //    event.preventDefault();
+     //   nameValidate();
+     //   sobrenameValidate();
+     //   telValidate();
+     //   redesocialValidate()
+     //   idadeValidate();
+     //   cidadeValidate();
+      //  emailValidate();
+      //  validardataDeNascimento();
         
-    });
+   // });
+    const form = document.querySelector("form");
+    form.addEventListener("submit", (e) => pegaSubmit(e));
 
-    function formJsonString( form ) {
-        var obj = {};
-        var elements = form.querySelectorAll( "input, select, textarea" );
-        elements.forEach(element => {
-            let name = element.name
-            let value = element.value
-        if(name){
-          obj[name] = value
-        }
-    })
-        return JSON.stringify( obj );
-        }
 
+    function pegaSubmit(event) {
+    event.preventDefault();
+
+    const dados = new FormData(event.target);
+    const valor= Object.fromEntries(dados.entries());
+
+    alert(JSON.stringify(valor, null, 2));
+    }
+
+    function calcularIdade() {
+    let userInput = document.getElementById('nascimento').value;
+    let data = new Date(userInput);
+        let month_diff = Date.now() - data.getTime();
+    
+        let age_dt = new Date(month_diff); 
+        
+        let year = age_dt.getUTCFullYear();
+        
+        let idade = Math.abs(year - 1970);
+    
+        return document.getElementById('idade').value = idade;
+    
+}
 
     function setError(index){
         campos[index].style.border = '2px solid #e63636';
@@ -171,6 +185,17 @@
         }
     }
 
+    function emailValidate(){
+        if(!emailRegex.test(campos[2].value))
+        {
+            setError(2);
+        }
+        else
+        {
+            removeError(2);
+        }
+    }
+
     function telValidate(){
         if(campos[3].value.length < 8)
         {
@@ -182,14 +207,25 @@
         }
     }
 
+    function validardataDeNascimento(){
+
+    if (campos[4].value.length < 1){
+        setError(4);
+    }    
+    else {
+         removeError(4);
+    }
+    }
+
+
     function idadeValidate(){
-        if(campos[4].value.length < 1)
+        if(campos[5].value.length < 1)
         {
-            setError(4);
+            setError(5);
         }
         else
         {
-            removeError(4);
+            removeError(5);
         }
     }
 
@@ -204,16 +240,7 @@
         }
     }
 
-    function emailValidate(){
-        if(!emailRegex.test(campos[2].value))
-        {
-            setError(2);
-        }
-        else
-        {
-            removeError(2);
-        }
-    }
+   
 
     function redesocialValidate(){
         if(campos[7].value.length < 3)
@@ -226,17 +253,6 @@
         }
     }
 
-    function validardataDeNascimento(){
-
-        if (campos[5].value.length < 1){
-                setError(5);
-        } 
-        else {
-            removeError(5);
-        }
-
-
-}
 
 </script>
 </html>
